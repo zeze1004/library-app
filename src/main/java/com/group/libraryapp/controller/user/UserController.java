@@ -52,13 +52,29 @@ public class UserController {
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdataRequest request) {
-        String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = [변경할 값] where [조건]
+        String readSql = "select * from user where id = ?"; // 유저 정보를 수정하기 전에 유저 정보가 있는지 확인함
+        // 유저 정보가 있으면 [0](쿼리 리스트)이 생김
+        // 없으면 빈 값
+        // select * from user where id = request.getId()
+        // select sql의 결과가 있으면 0으로 반환
+        // 쿼리가 0을 list로 반환 => [0]
+        boolean isUserNotExist = jdbcTemplate.query(readSql, (rs, rowNum) -> 0, request.getId()).isEmpty();
+        if (isUserNotExist) {
+            throw new IllegalArgumentException();
+        }
 
+        String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = [변경할 값] where [조건]
         jdbcTemplate.update(sql, request.getName(), request.getId());
     }
 
     @DeleteMapping("/user")
     public void deleteUser(@RequestParam String name) {
+        String readSql = "select * from user where name = ?"; // 유저 정보를 수정하기 전에 유저 정보가 있는지 확인함
+        boolean isUserNotExist = jdbcTemplate.query(readSql, (rs, rowNum) -> 0, name).isEmpty();
+        if (isUserNotExist) {
+            throw new IllegalArgumentException();
+        }
+
         String sql = "delete from user where name = ?"; // localhost:8080/user?name=sojung
         jdbcTemplate.update(sql, name);
     }
