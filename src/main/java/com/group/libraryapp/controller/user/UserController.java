@@ -52,8 +52,14 @@ public class UserController {
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdataRequest request) {
-        String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = ?(변경할 값) where [조건]
+        String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = [변경할 값] where [조건]
 
         jdbcTemplate.update(sql, request.getName(), request.getId());
+    }
+
+    @DeleteMapping("/user")
+    public void deleteUser(@RequestParam String name) {
+        String sql = "delete from user where name = ?"; // localhost:8080/user?name=sojung
+        jdbcTemplate.update(sql, name);
     }
 }
