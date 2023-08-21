@@ -3,12 +3,10 @@ package com.group.libraryapp.controller.user;
 import com.group.libraryapp.domain.user.User;
 import com.group.libraryapp.dto.response.UserResponse;
 import com.group.libraryapp.dto.user.request.UserCreateRequest;
+import com.group.libraryapp.dto.user.request.UserUpdataRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,5 +48,12 @@ public class UserController {
                 return new UserResponse(id, name, age);
             }
         });
+    }
+
+    @PutMapping("/user")
+    public void updateUser(@RequestBody UserUpdataRequest request) {
+        String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = ?(변경할 값) where [조건]
+
+        jdbcTemplate.update(sql, request.getName(), request.getId());
     }
 }
