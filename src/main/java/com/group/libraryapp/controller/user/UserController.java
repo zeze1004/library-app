@@ -19,10 +19,11 @@ public class UserController {
 
 //    private final List<User> users = new ArrayList<>(); // 메모리에 저장하는걸 DB에 저장하게끔 바꿈
     private final JdbcTemplate jdbcTemplate;
-    private final UserService userService = new UserService();
+    private final UserService userService;
 
     public UserController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.userService = new UserService(jdbcTemplate);
     }
 
 
@@ -54,7 +55,7 @@ public class UserController {
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdataRequest request) {
-        userService.updateUser(jdbcTemplate, request);
+        userService.updateUser(request);
 
     }
 

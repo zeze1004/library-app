@@ -3,8 +3,13 @@ package com.group.libraryapp.repository.user;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserRepository {
+    private final JdbcTemplate jdbcTemplate;
 
-    public boolean isUserNotExist(JdbcTemplate jdbcTemplate, long id) {
+    public UserRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public boolean isUserNotExist(long id) {
         String readSql = "select * from user where id = ?"; // 유저 정보를 수정하기 전에 유저 정보가 있는지 확인함
         // 유저 정보가 있으면 [0](쿼리 리스트)이 생김
         // 없으면 빈 값
@@ -15,7 +20,7 @@ public class UserRepository {
     }
 
     // 유저 이름 변경
-    public void updateUserName(JdbcTemplate jdbcTemplate, String name, long id) {
+    public void updateUserName(String name, long id) {
         String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = [변경할 값] where [조건]
         jdbcTemplate.update(sql, name, id);
     }
