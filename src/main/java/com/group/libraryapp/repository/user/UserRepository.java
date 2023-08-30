@@ -22,20 +22,9 @@ public class UserRepository {
         return jdbcTemplate.query(readSql, (rs, rowNum) -> 0, id).isEmpty();
     }
 
-    // 유저 이름 변경
-    public void updateUserName(String name, long id) {
-        String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = [변경할 값] where [조건]
-        jdbcTemplate.update(sql, name, id);
-    }
-
     public boolean isUserNotExist(String name) {
         String readSql = "select * from user where name = ?"; // 유저 정보를 수정하기 전에 유저 정보가 있는지 확인함
         return jdbcTemplate.query(readSql, (rs, rowNum) -> 0, name).isEmpty();
-    }
-
-    public void deleteUser(String name) {
-        String sql = "delete from user where name = ?"; // localhost:8080/user?name=sojung
-        jdbcTemplate.update(sql, name);
     }
 
     public void saveUser(String name, Integer age) {
@@ -51,5 +40,15 @@ public class UserRepository {
             int age = rs.getInt("age");
             return new UserResponse(id, name, age);
         });
+    }
+
+    public void updateUserName(String name, long id) {
+        String sql = "update user set name = ? where id = ?";   // update [테이블] set [열] = [변경할 값] where [조건]
+        jdbcTemplate.update(sql, name, id);
+    }
+
+    public void deleteUser(String name) {
+        String sql = "delete from user where name = ?"; // localhost:8080/user?name=sojung
+        jdbcTemplate.update(sql, name);
     }
 }
